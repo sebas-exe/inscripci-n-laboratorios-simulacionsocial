@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratorios de Simulación Social y Desarrollo Urbano · 29 Oct | Areandina + UFLO + Simulación Urbana</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            areandina: {
+              green: '#7fb536',
+              magenta: '#e6007e',
+              orange: '#F59C2F',
+              dark: '#0B0F14',
+              card: '#121822',
+              border: '#222D3D'
+            },
+            simurbana: {
+              blue: '#1A6992',
+              cyan: '#38BDF8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0B0F14;
+      color: #F8FAFC;
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(127, 181, 54, 0.14) 0px, transparent 50%),
+        radial-gradient(at 90% 15%, rgba(26, 105, 146, 0.18) 0px, transparent 48%),
+        radial-gradient(at 80% 85%, rgba(230, 0, 126, 0.10) 0px, transparent 50%);
+      letter-spacing: -0.015em;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(127, 181, 54, 0.15) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    @keyframes floatAgent {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(6px, -6px); }
+    }
+    .agent-dot {
+      animation: floatAgent 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans antialiased selection:bg-[#7fb536] selection:text-black pb-16">
+
+  <!-- Barra superior Semana del Trabajo Social -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-[#0B0F14]/90 border-b border-[#222D3D] px-4 py-2.5">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center gap-1.5 bg-[#e6007e]/15 border border-[#e6007e]/40 text-[#ff66b8] text-[11px] font-mono px-2.5 py-0.5 rounded-full font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#e6007e] animate-pulse"></span>
+          SEMANA DEL TRABAJO SOCIAL · CIENCIAS SOCIALES Y HUMANAS
+        </span>
+      </div>
+      <div class="text-xs font-mono text-slate-300 flex items-center gap-2">
+        <span class="text-[#7fb536] font-semibold">Jueves 29 Oct 2026</span>
+        <span>·</span>
+        <span>4:00 a 6:00 p. m. (COL)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast interno sin alert() -->
+  <div id="ux-toast" class="fixed bottom-5 right-5 z-50 hidden max-w-sm bg-[#121822] border-l-4 border-[#F59C2F] text-white px-4 py-3 rounded-xl shadow-2xl border border-[#222D3D] text-xs font-medium flex items-center gap-3">
+    <span class="w-2.5 h-2.5 rounded-full bg-[#F59C2F] shrink-0"></span>
+    <span id="ux-toast-text"></span>
+  </div>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+
+    <!-- ==========================================
+         CABECERA CON LOS 3 LOGOS Y HERO PRINCIPAL
+         ========================================== -->
+    <section class="relative rounded-2xl bg-[#121822]/95 border border-[#222D3D] p-6 sm:p-9 overflow-hidden grid-bg shadow-2xl">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#7fb536] via-[#1A6992] to-[#e6007e]"></div>
+
+      <!-- Isotipo "A" de Areandina en marca de agua (Manual pág. 19) -->
+      <svg class="hidden md:block absolute -right-8 -top-6 w-72 h-72 text-[#7fb536]/[0.05] pointer-events-none select-none" viewBox="0 0 120 150" fill="none">
+        <path d="M24 130V62C24 42.1177 40.1177 26 60 26C79.8823 26 96 42.1177 96 62V130" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+        <circle cx="60" cy="62" r="36" stroke="currentColor" stroke-width="24"/>
+      </svg>
+
+      <!-- FRANJA DE 3 LOGOS CO-ORGANIZADORES -->
+      <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 items-center gap-4 pb-6 mb-6 border-b border-[#222D3D]">
+        
+        <!-- 1. Logo Oficial Areandina -->
+        <div class="flex items-center justify-center sm:justify-start gap-3">
+          <div class="w-11 h-12 rounded-xl bg-[#7fb536]/10 border border-[#7fb536]/35 flex items-center justify-center shrink-0">
+            <svg class="w-7 h-9" viewBox="0 0 100 125" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Isotipo Areandina">
+              <path d="M22 106V52C22 35.4315 35.4315 22 52 22C68.5685 22 82 35.4315 82 52V106" stroke="#7fb536" stroke-width="19" stroke-linecap="round"/>
+              <circle cx="52" cy="52" r="30" stroke="#7fb536" stroke-width="19"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xl font-extrabold tracking-wider text-[#7fb536] leading-none font-display">AREANDINA</div>
+            <div class="text-[10px] font-medium text-slate-300 mt-0.5">Fundación Universitaria del Área Andina</div>
+            <div class="text-[8.5px] font-mono uppercase tracking-widest text-slate-400">Vigilada Mineducación</div>
+          </div>
+        </div>
+
+        <!-- 2. Logo Oficial Simulación Urbana · Dr. Javier Sandoval -->
+        <div class="flex items-center justify-center">
+          <div class="bg-white px-3.5 py-2 rounded-xl border border-white/20 shadow-md flex items-center gap-2.5">
+            <!-- Esfera orgánica de trazos azules de Simulación Urbana -->
+            <svg class="w-9 h-9 shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="26" stroke="#1A6992" stroke-width="2.5" stroke-dasharray="12 4"/>
+              <path d="M12 24C22 28 38 16 54 22" stroke="#1A6992" stroke-width="3" stroke-linecap="round"/>
+              <path d="M8 34C24 39 36 25 56 33" stroke="#1A6992" stroke-width="3" stroke-linecap="round"/>
+              <path d="M14 45C28 48 40 38 50 44" stroke="#1A6992" stroke-width="3" stroke-linecap="round"/>
+              <path d="M26 8C22 24 38 40 30 56" stroke="#1A6992" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            <div class="leading-tight">
+              <div class="text-[13px] font-extrabold tracking-tight text-[#1A6992] uppercase">Simulación Urbana</div>
+              <div class="text-[9.5px] font-semibold text-slate-600 tracking-wider uppercase">Dr. Javier Sandoval</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Logo Oficial UFLO Universidad -->
+        <div class="flex items-center justify-center sm:justify-end">
+          <div class="bg-white px-4 py-2 rounded-xl border border-white/20 shadow-md flex items-center justify-center">
+            <svg class="h-8 w-auto" viewBox="0 0 250 78" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="UFLO Universidad">
+              <defs>
+                <linearGradient id="ufloGradSim" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#4A1238" />
+                  <stop offset="32%" stop-color="#22316C" />
+                  <stop offset="68%" stop-color="#236B77" />
+                  <stop offset="100%" stop-color="#31B68A" />
+                </linearGradient>
+              </defs>
+              <text x="125" y="47" text-anchor="middle" fill="url(#ufloGradSim)" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="52" letter-spacing="2">UFLO</text>
+              <text x="126" y="71" text-anchor="middle" fill="#18605C" font-family="'Plus Jakarta Sans', sans-serif" font-weight="400" font-size="16" letter-spacing="6.5">UNIVERSIDAD</text>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TÍTULO Y CONTEXTO DEL EVENTO -->
+      <div class="relative z-10 space-y-4">
+        <div class="inline-flex flex-wrap items-center gap-2 text-xs font-mono text-[#F59C2F] bg-[#F59C2F]/10 border border-[#F59C2F]/30 px-3 py-1 rounded-md">
+          <span>Facultad de Ciencias Sociales y Humanas</span>
+          <span>·</span>
+          <span>Trabajo Social + Sociología + Ciencias Sociales Abiertas</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight text-white leading-tight">
+          Laboratorios de <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#7fb536] via-[#38BDF8] to-[#F59C2F]">Simulación Social y Desarrollo Urbano</span>
+        </h1>
+
+        <p class="text-slate-200 text-sm sm:text-base leading-relaxed max-w-3xl">
+          En la <strong>Semana del Trabajo Social</strong> abrimos el código de dos experiencias reales: cómo predecir con algoritmos en qué meses un municipio colombiano es más propenso a sufrir un desastre natural —y con qué magnitud—, y cómo modelar ciudades y sistemas sociales complejos usando <strong>NetLogo e Inteligencia Artificial</strong> sin barreras de programación.
+        </p>
+
+        <!-- TARJETAS DE LOS 2 BLOQUES DE LA AGENDA -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3">
+          
+          <!-- Bloque 1: Hackathon PNUD -->
+          <div class="bg-[#0B0F14]/90 border border-[#222D3D] hover:border-[#F59C2F]/60 rounded-xl p-5 transition space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-mono font-bold uppercase text-[#F59C2F] bg-[#F59C2F]/10 px-2.5 py-0.5 rounded">
+                Bloque 01 · 25 Minutos · Caso Real
+              </span>
+              <span class="text-xs font-mono text-slate-400">4:00 p. m. COL</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">
+              Aprendizajes en la Hackathon del PNUD: Predicción Municipal de Desastres
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Contado a dos voces entre <strong>estudiante y docente</strong>: cómo construimos un algoritmo para detectar qué municipios del país son más vulnerables mes a mes, calcular la <strong>magnitud del fenómeno con intervalos de confianza</strong>, qué bases de datos e ingeniería de variables usamos y qué métricas nos dieron el reconocimiento.
+            </p>
+          </div>
+
+          <!-- Bloque 2: Charla Central Dr. Javier Sandoval -->
+          <div class="bg-[#0B0F14]/90 border border-[#222D3D] hover:border-[#38BDF8]/60 rounded-xl p-5 transition space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-mono font-bold uppercase text-[#38BDF8] bg-[#1A6992]/25 px-2.5 py-0.5 rounded">
+                Bloque 02 · Charla Central · Internacional
+              </span>
+              <span class="text-xs font-mono text-slate-400">4:30 p. m. COL</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">
+              Dr. Javier Sandoval · Sistemas Complejos, NetLogo e IA en Ciencias Sociales
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>1) Teoría y contexto:</strong> modelado, simulación y sistemas complejos basados en agentes (ABM).<br/>
+              <strong>2) Práctica en vivo:</strong> ejemplos de modelado social y urbano en <strong>NetLogo</strong>.<br/>
+              <strong>3) El salto con IA:</strong> cómo se rompieron las barreras de programación para aplicar simulación en Trabajo Social y Sociología.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MICRO-EXPERIENCIA UX ANTES DE REGISTRARSE
+         ========================================== -->
+    <section class="rounded-2xl bg-[#121822]/95 border border-[#222D3D] p-6 sm:p-8 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#222D3D] pb-4">
+        <div>
+          <span class="text-xs font-mono uppercase text-[#7fb536] font-semibold">Calentamiento Interactivo (30 segundos)</span>
+          <h2 class="text-xl sm:text-2xl font-display font-bold text-white mt-0.5">
+            Pon a prueba los 2 modelos del encuentro antes de registrarte
+          </h2>
+        </div>
+        <span class="text-xs font-mono bg-[#0B0F14] border border-[#222D3D] px-3 py-1 rounded-lg text-slate-300">
+          Paso interactivo 1 de 2
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Micro-Simulador 1: Predicción PNUD -->
+        <div class="bg-[#0B0F14] border border-[#222D3D] rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-[#F59C2F] font-semibold uppercase">01 · Simulador Hackathon PNUD</span>
+            <span class="text-[11px] font-mono text-slate-400">Intervalo de confianza: 95%</span>
+          </div>
+          <p class="text-xs text-slate-300">
+            Elige un escenario territorial y un mes crítico para ver cómo el modelo estima la propensión municipal y traduce el dato en acción para Trabajo Social y Sociología:
+          </p>
+
+          <div class="grid grid-cols-2 gap-2.5 text-xs">
+            <div>
+              <label class="block font-mono text-[10px] uppercase text-slate-400 mb-1">Tipología Municipal</label>
+              <select id="sim-municipio" onchange="runPnudPreview()" class="w-full bg-[#121822] border border-[#222D3D] rounded-lg px-3 py-2 text-white focus:border-[#F59C2F] focus:outline-none">
+                <option value="ribereño">Municipio Ribereño (Cuenca Baja)</option>
+                <option value="andino">Municipio Andino de Ladera</option>
+                <option value="caribe">Municipio Costero / Seco</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase text-slate-400 mb-1">Mes de Predicción</label>
+              <select id="sim-mes" onchange="runPnudPreview()" class="w-full bg-[#121822] border border-[#222D3D] rounded-lg px-3 py-2 text-white focus:border-[#F59C2F] focus:outline-none">
+                <option value="octubre">Octubre - Noviembre (2da Temporada Lluvias)</option>
+                <option value="abril">Abril - Mayo (1ra Temporada Lluvias)</option>
+                <option value="enero">Enero - Febrero (Temporada Seca / El Niño)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="pnud-output" class="bg-[#121822] border border-[#F59C2F]/40 rounded-lg p-3.5 text-xs space-y-1.5">
+            <div class="flex justify-between font-mono">
+              <span class="text-[#F59C2F] font-bold" id="pnud-prob">Propensión Estimada: ALTA (0.84)</span>
+              <span class="text-slate-300" id="pnud-ic">IC 95%: [0.78 – 0.90]</span>
+            </div>
+            <p class="text-slate-200 leading-relaxed" id="pnud-insight">
+              <strong>Lectura Social:</strong> El cruce de precipitación histórica y vulnerabilidad habitacional permite activar rutas comunitarias de Trabajo Social 3 semanas antes del pico de inundación.
+            </p>
+          </div>
+        </div>
+
+        <!-- Micro-Simulador 2: Agentes en NetLogo -->
+        <div class="bg-[#0B0F14] border border-[#222D3D] rounded-xl p-5 space-y-4 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-[#38BDF8] font-semibold uppercase">02 · Mirada NetLogo (Dr. Javier Sandoval)</span>
+              <span class="text-[11px] font-mono text-[#7fb536]">Agentes en red</span>
+            </div>
+            <p class="text-xs text-slate-300">
+              ¿Qué fenómeno social o urbano te gustaría aprender a simular con <strong>agentes e Inteligencia Artificial</strong> sin tener que ser programador/a? *(Toca tu favorito; quedará guardado en tu registro)*:
+            </p>
+
+            <div class="grid grid-cols-1 gap-2 pt-1">
+              <button type="button" onclick="selectTopic(this, 'Gestión del riesgo, desastres y vulnerabilidad comunitaria')" class="topic-btn text-left p-2.5 rounded-lg bg-[#121822] border border-[#7fb536] text-xs text-white flex items-center justify-between transition">
+                <span>🌊 Gestión del riesgo, desastres y respuesta comunitaria</span>
+                <span class="text-[10px] font-mono text-[#7fb536]">Seleccionado ✓</span>
+              </button>
+              <button type="button" onclick="selectTopic(this, 'Segregación urbana, vivienda y acceso a servicios públicos')" class="topic-btn text-left p-2.5 rounded-lg bg-[#121822] border border-[#222D3D] hover:border-[#38BDF8] text-xs text-slate-200 flex items-center justify-between transition">
+                <span>🏙️ Segregación urbana, vivienda y acceso a servicios en barrios</span>
+                <span class="text-[10px] font-mono text-slate-400">Elegir</span>
+              </button>
+              <button type="button" onclick="selectTopic(this, 'Comportamiento colectivo, redes sociales y políticas públicas')" class="topic-btn text-left p-2.5 rounded-lg bg-[#121822] border border-[#222D3D] hover:border-[#e6007e] text-xs text-slate-200 flex items-center justify-between transition">
+                <span>🤝 Comportamiento colectivo, cuidado y políticas públicas</span>
+                <span class="text-[10px] font-mono text-slate-400">Elegir</span>
+              </button>
+            </div>
+          </div>
+          <input type="hidden" id="tema-elegido" value="Gestión del riesgo, desastres y vulnerabilidad comunitaria" />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         FORMULARIO ÁGIL DE INSCRIPCIÓN (60 SEG)
+         ========================================== -->
+    <section id="form-section" class="rounded-2xl bg-[#121822]/95 border border-[#222D3D] p-6 sm:p-8 space-y-6">
+      <div class="border-b border-[#222D3D] pb-4 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="text-xs font-mono uppercase text-[#e6007e] font-semibold">Paso 2 de 2 · Reserva tu lugar en Google Meet</span>
+          <h2 class="text-2xl font-display font-bold text-white mt-0.5">Datos rápidos para enviarte el acceso</h2>
+        </div>
+        <span class="text-xs font-mono text-slate-400">Jueves 29 de octubre · 4:00 p. m. a 6:00 p. m.</span>
+      </div>
+
+      <form id="sim-reg-form" onsubmit="handleRegistration(event)" class="space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Nombre completo *</label>
+            <input type="text" id="reg-nombre" required placeholder="Tu nombre y apellidos" class="w-full bg-[#0B0F14] border border-[#222D3D] rounded-xl px-4 py-3 text-sm text-white focus:border-[#7fb536] focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Correo electrónico (Institucional o personal) *</label>
+            <input type="email" id="reg-correo" required placeholder="tucorreo@estudiantes.areandina.edu.co" class="w-full bg-[#0B0F14] border border-[#222D3D] rounded-xl px-4 py-3 text-sm text-white focus:border-[#7fb536] focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Tu vínculo o programa *</label>
+            <select id="reg-programa" required class="w-full bg-[#0B0F14] border border-[#222D3D] rounded-xl px-4 py-3 text-sm text-white focus:border-[#7fb536] focus:outline-none">
+              <option value="Trabajo Social (Semana del Trabajo Social)">Estudiante / Docente de Trabajo Social</option>
+              <option value="Sociología">Estudiante / Docente de Sociología</option>
+              <option value="Otro Programa - Ciencias Sociales y Humanas">Otro programa · Fac. Ciencias Sociales y Humanas</option>
+              <option value="UFLO Universidad / Invitado Internacional">Comunidad UFLO Universidad / Internacional</option>
+              <option value="Otra Facultad / Comunidad Abierta">Otra Facultad / Comunidad Universitaria Abierta</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">¿Alguna vez has usado código o simuladores? *</label>
+            <select id="reg-experiencia" class="w-full bg-[#0B0F14] border border-[#222D3D] rounded-xl px-4 py-3 text-sm text-white focus:border-[#7fb536] focus:outline-none">
+              <option value="Cero experiencia (Quiero aprender cómo empezar con IA)">Cero experiencia (Quiero ver cómo empezar desde cero con IA)</option>
+              <option value="He usado Excel / SPSS / R básico">He usado hojas de cálculo o software estadístico básico</option>
+              <option value="Ya he explorado Python, R o NetLogo">Ya he explorado algo de código o NetLogo</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">
+            (Opcional) ¿Qué pregunta le harías al equipo de la Hackathon PNUD o al Dr. Javier Sandoval?
+          </label>
+          <input type="text" id="reg-pregunta" placeholder="Ej. ¿Cómo consiguieron las bases de datos por municipio o cómo traduzco una pregunta de Trabajo Social a NetLogo?" class="w-full bg-[#0B0F14] border border-[#222D3D] rounded-xl px-4 py-3 text-sm text-white focus:border-[#7fb536] focus:outline-none" />
+        </div>
+
+        <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span class="text-xs text-slate-400 font-mono">
+            🔒 Al registrarte desbloqueas de inmediato el acceso y el recordatorio de calendario.
+          </span>
+          <button type="submit" id="btn-submit-sim" class="w-full sm:w-auto cursor-pointer bg-[#7fb536] hover:bg-[#8cd63d] text-black font-display font-extrabold px-7 py-3.5 rounded-xl transition shadow-lg shadow-[#7fb536]/20 flex items-center justify-center gap-2">
+            <span>Confirmar mi asistencia al jueves 29 Oct</span>
+            <span>→</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ==========================================
+         PANTALLA DE ACCESO DESBLOQUEADO (MEET)
+         ========================================== -->
+    <section id="success-sim" class="hidden rounded-2xl bg-[#121822] border-2 border-[#7fb536] p-6 sm:p-9 space-y-6 shadow-2xl">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="inline-flex items-center gap-2 bg-[#7fb536]/20 text-[#7fb536] font-mono text-xs px-3 py-1 rounded-full font-bold">
+          ✓ LUGAR RESERVADO · SEMANA DEL TRABAJO SOCIAL
+        </span>
+        <span class="text-xs font-mono text-slate-300">Jueves 29 de octubre · 4:00 p. m. a 6:00 p. m. (COL)</span>
+      </div>
+
+      <div class="space-y-2">
+        <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white" id="sim-welcome-name">
+          ¡Todo listo para el Laboratorio!
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          Registramos tu inscripción y tu interés temático para la sesión. Guarda desde ya el evento en tu calendario institucional para que te salte la notificación con el enlace de **Google Meet** 15 minutos antes de empezar.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <a id="calendar-link" href="#" target="_blank" class="bg-[#7fb536] hover:bg-[#8cd63d] text-black font-display font-extrabold text-sm px-5 py-3.5 rounded-xl flex items-center justify-center gap-2 transition">
+          📅 Agendar en mi Google Calendar (29 Oct · 4:00 p. m.)
+        </a>
+        <div class="bg-[#0B0F14] border border-[#222D3D] rounded-xl px-4 py-3 flex flex-col justify-center">
+          <span class="text-[10px] font-mono uppercase text-[#F59C2F]">Sala Sincrónica Oficial</span>
+          <span id="meet-url-text" class="text-xs font-mono text-slate-200 truncate">Enlace Google Meet enviado a tu correo y calendario</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 🔗 PEGA AQUÍ TU URL /exec DE GOOGLE APPS SCRIPT
+    // =========================================================================
+    const GOOGLE_SCRIPT_SIMULACION_URL = "";
+    
+    // 🔗 PEGA AQUÍ EL LINK DE GOOGLE MEET DEL JUEVES 29 DE OCTUBRE:
+    const GOOGLE_MEET_LINK = "https://meet.google.com/";
+
+    function runPnudPreview() {
+      const mun = document.getElementById('sim-municipio').value;
+      const mes = document.getElementById('sim-mes').value;
+      const probEl = document.getElementById('pnud-prob');
+      const icEl = document.getElementById('pnud-ic');
+      const insightEl = document.getElementById('pnud-insight');
+
+      if (mun === 'ribereño' && mes === 'octubre') {
+        probEl.textContent = 'Propensión Estimada: MUY ALTA (0.89)';
+        icEl.textContent = 'Magnitud alta · IC 95%: [0.83 – 0.94]';
+        insightEl.innerHTML = '<strong>Lectura Social:</strong> En municipios ribereños durante la segunda temporada de lluvias, anticipar la magnitud permite a Trabajo Social priorizar hogares con jefatura femenina y adultos mayores antes de la creciente.';
+      } else if (mun === 'andino') {
+        probEl.textContent = 'Propensión Estimada: ALTA - REMOCIÓN EN MASA (0.78)';
+        icEl.textContent = 'Magnitud media-alta · IC 95%: [0.71 – 0.85]';
+        insightEl.innerHTML = '<strong>Lectura Social:</strong> La ingeniería de variables cruza pendiente topográfica, saturación de suelos y asentamientos periféricos para focalizar alertas tempranas barriales.';
+      } else {
+        probEl.textContent = 'Propensión Estimada: MODERADA - DÉFICIT HÍDRICO (0.67)';
+        icEl.textContent = 'Magnitud focalizada · IC 95%: [0.60 – 0.74]';
+        insightEl.innerHTML = '<strong>Lectura Social:</strong> El modelo detecta estrés hídrico y riesgo de incendios por municipio, clave para planificar abastecimiento comunitario y redes de cuidado rural.';
+      }
+    }
+
+    function selectTopic(btn, topicText) {
+      document.getElementById('tema-elegido').value = topicText;
+      const allBtns = document.querySelectorAll('.topic-btn');
+      allBtns.forEach(function(b) {
+        b.classList.remove('border-[#7fb536]');
+        b.classList.add('border-[#222D3D]');
+        b.lastElementChild.textContent = 'Elegir';
+        b.lastElementChild.className = 'text-[10px] font-mono text-slate-400';
+      });
+      btn.classList.remove('border-[#222D3D]');
+      btn.classList.add('border-[#7fb536]');
+      btn.lastElementChild.textContent = 'Seleccionado ✓';
+      btn.lastElementChild.className = 'text-[10px] font-mono text-[#7fb536]';
+    }
+
+    async function handleRegistration(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('reg-nombre').value.trim();
+      const correo = document.getElementById('reg-correo').value.trim();
+      const programa = document.getElementById('reg-programa').value;
+      const experiencia = document.getElementById('reg-experiencia').value;
+      const pregunta = document.getElementById('reg-pregunta').value.trim();
+      const tema = document.getElementById('tema-elegido').value;
+
+      const btn = document.getElementById('btn-submit-sim');
+      btn.disabled = true;
+      btn.textContent = 'Reservando tu cupo...';
+
+      const payload = {
+        evento: 'LABORATORIO_SIMULACION_29_OCT',
+        nombre: nombre,
+        correo: correo,
+        programa: programa,
+        experienciaPrevia: experiencia,
+        temaInteresSimulacion: tema,
+        preguntaInvitados: pregunta
+      };
+
+      // Envío al Webhook de Google Apps Script (compatible con GitHub Pages)
+      if (GOOGLE_SCRIPT_SIMULACION_URL && GOOGLE_SCRIPT_SIMULACION_URL.indexOf('https://script.google.com') === 0) {
+        try {
+          await fetch(GOOGLE_SCRIPT_SIMULACION_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+        } catch (err) {
+          console.warn('Registro procesado en modo local:', err);
+        }
+      }
+
+      // Construir enlace directo de Google Calendar para el Jueves 29 de Octubre 2026 (4:00 PM a 6:00 PM COL = 21:00 a 23:00 UTC)
+      const calTitle = encodeURIComponent('Laboratorios de Simulación Social y Desarrollo Urbano (Areandina + UFLO + Simulación Urbana)');
+      const calDetails = encodeURIComponent(
+        'Semana del Trabajo Social · Facultad de Ciencias Sociales y Humanas.\n\n' +
+        '• Bloque 1: Experiencia Hackathon PNUD (Algoritmo de predicción de desastres por municipio e intervalos de confianza).\n' +
+        '• Bloque 2: Charla Central Dr. Javier Sandoval (Sistemas complejos, NetLogo e IA en Ciencias Sociales).\n\n' +
+        'Enlace Google Meet: ' + GOOGLE_MEET_LINK
+      );
+      const calUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + calTitle +
+        '&dates=20261029T210000Z/20261029T230000Z&details=' + calDetails;
+
+      document.getElementById('calendar-link').href = calUrl;
+      if (GOOGLE_MEET_LINK && GOOGLE_MEET_LINK !== "https://meet.google.com/") {
+        document.getElementById('meet-url-text').innerHTML = '<a href="' + GOOGLE_MEET_LINK + '" target="_blank" class="text-[#38BDF8] underline font-bold">' + GOOGLE_MEET_LINK + '</a>';
+      }
+      document.getElementById('sim-welcome-name').textContent = '¡Nos vemos el jueves 29 de octubre, ' + nombre + '!';
+      document.getElementById('form-section').classList.add('hidden');
+      document.getElementById('success-sim').classList.remove('hidden');
+      document.getElementById('success-sim').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.runPnudPreview = runPnudPreview;
+    window.selectTopic = selectTopic;
+    window.handleRegistration = handleRegistration;
+  </script>
+</body>
+</html>
